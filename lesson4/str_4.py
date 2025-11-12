@@ -13,11 +13,16 @@
 '''
 
 s = "имя: Дмитрий, фамилия: Иванов, возраст: 18"
+
 spis = s.split(",")
+
 name_cher = spis[0].split(': ')
 name = name_cher[1]
+
 surname_cher = spis[1].split(': ')
 surname = surname_cher[1]
+
 age_cher = spis[2].split(': ')
 age =  age_cher[1]
-print ('- ' + name, '- ' + surname,'- ' + age, sep="\n")
+
+print ('- ' + name, surname, age, sep="\n- ")
