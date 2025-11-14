@@ -15,8 +15,10 @@ n5 = input(zap)
 
 spis_name = [n1, n2, n3, n4, n5]
 
-spis_name.sort()
-print(spis_name)
+#Преобразуем все именна с большой буквы
+spis_up = list(map(str.capitalize,spis_name))
 
-spis_low = list(map(str.lower,spis_name))
-print('Имя Вася:', 'вася' in spis_low)
+spis_up.sort()
+print(spis_up)
+
+print('Имя Вася:', 'Вася' in spis_up)
