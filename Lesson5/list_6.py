@@ -10,3 +10,16 @@
     
 '''
 
+l_orig = [1, 1, 2, 3, 21, 8, 13, 21, 34, 55, 89]
+
+l_min = min(l_orig)
+print(l_min)
+
+l_max = max(l_orig)
+print(l_max)
+
+l_sum = sum(l_orig)
+print(l_sum)
+
+l_nech = l_orig[::2]
+print(l_nech)

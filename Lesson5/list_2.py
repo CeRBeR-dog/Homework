@@ -18,4 +18,5 @@ spis_name = [n1, n2, n3, n4, n5]
 spis_name.sort()
 print(spis_name)
 
-print('Имя Вася:', 'Вася' in spis_name)
+spis_low = list(map(str.lower,spis_name))
+print('Имя Вася:', 'вася' in spis_low)
