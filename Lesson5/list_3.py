@@ -11,5 +11,7 @@ l1[0], l1[4] = l1[4], l1[0]
 print(l1)
 
 #Удаление 3 элемента
-l1.pop(2)
-print(l1[2])
+ud = l1.pop(2)
+print(ud)
+
+print(l1)
