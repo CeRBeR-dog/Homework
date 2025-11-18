@@ -5,14 +5,14 @@ d = {'one':11, 'two':22, 'hello':'python', True:False}
 
 """
 d = {'one':11, 'two':22, 'hello':'python', True:False}
-
-num = input("Введите номер элемента")
-
-spis_zn = list(d.values())
-
-num = spis_zn.index(num)
-
 print(d)
-del d[num]
+
+d_elm = list(d.keys())
+elm = input("Введите элемента: ")
+
+num_el = d_elm.index(elm)
+print(num_el)
+
+del d[elm]
 
 print(d)

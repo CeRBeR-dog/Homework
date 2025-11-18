@@ -6,4 +6,10 @@
 
 """
 
+nab = input('Введите фразу: ')
 
+mno_sem = set(nab) 
+print (len(mno_sem))
+
+mno_word = nab.split()
+print (len(mno_word))
