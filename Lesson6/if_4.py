@@ -19,12 +19,12 @@ bol_20 = ch > 20
 
 
 if men_20:
-    for i in range (1, ch):
+    for i in range (1, ch+1):
         if i % 7 == 0:
             count += 1
     print (fr.format(7,ch, count))
 elif bol_20:
-    for i in range (1, ch):
+    for i in range (1, ch+1):
         if i % 11 == 0:
             count += 1
     print (fr.format(11,ch, count))
