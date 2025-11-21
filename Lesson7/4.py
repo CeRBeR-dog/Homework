@@ -10,3 +10,13 @@
 * - елочка со снегом
 '''
 
+high = int(input('Введите высоту ёлочки'))
+
+if 3 <= high <= 20:
+    for level in range (high):
+        # Пробелы
+        print(" "*(high - level -1 ), end="")
+        # Ёлочка
+        print ("*" *(2*level+1))
+
+

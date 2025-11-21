@@ -14,3 +14,11 @@
 
 
 '''
+
+sp = input("Ведите слова через пробел: ").split()
+
+for idndex, iteam in enumerate(sp):
+    ite = iteam
+    ite = list(ite)
+    let = ite[idndex]
+    print(f"{idndex + 1} - {iteam} - {let}")
