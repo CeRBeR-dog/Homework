@@ -7,4 +7,22 @@
     -распечатать отдельно отзывы
 
 """
+# Создание переменных
+name = ""
+rev = ""
+sub = ""
+baz_rev = {}
 
+# Ввод данных и формирование словаря
+while sub != "stop":
+    sub = input('Введите Имя и отзыв о магазине через пробел: ')
+    if sub.lower() == "stop":
+        break
+    name, rev = sub.split(' ', 1)
+    baz_rev[name] = rev
+    print (baz_rev)
+
+# Вывод данных
+print("Количество отзывов:", len(baz_rev))
+print("Имена пользователей:", list(baz_rev.keys()))
+print("Отзывы:", list(baz_rev.values()))

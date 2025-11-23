@@ -5,4 +5,24 @@
 
 """
 
+num = list(input('Введите любое число не менее 10: '))
+print(num)
 
+summa = 0
+dlin_num = len(num)
+
+
+# Проверка на число и его длину
+if dlin_num > 2:
+    # Нахождение суммы квадратов цифр
+    for i in num:
+        i = int(i)
+        i_vstep = i ** i
+        summa += i_vstep
+    print('Сумма квадратов цифр числа:', summa)
+
+else: 
+    print('Вы ввели число менее 10')
+
+    
+  
