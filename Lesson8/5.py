@@ -6,3 +6,5 @@
 
 '''
 
+def count_char(phr: str) -> dict:
+    
