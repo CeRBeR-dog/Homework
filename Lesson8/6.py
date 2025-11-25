@@ -8,3 +8,36 @@ Yes - если число уже встречалось и No, если нет
 
 """
 
+
+def yes_or_no(spis_num: str) -> list:
+    
+     # Проверка на целые числа
+    try:
+        for num in spis_num:
+            num = int(num)
+    
+    
+    except ValueError:
+        print('False')
+
+
+    # Если все числа целые
+    else:
+        spis_num = list(map(int, spis_num.split()))  
+        
+        #Создаем множестов для отслеживания встреченных чисел
+        seen = set()
+        res = []
+
+        # Проверяем каждое число
+        for num in spis_num:
+            if  num  in seen:
+                res.append('yes')
+            else:
+                res.append('no')
+                seen.add(num)
+        print(res)
+
+
+string = input("Введите числа через пробел: ")
+yes_or_no(string)
