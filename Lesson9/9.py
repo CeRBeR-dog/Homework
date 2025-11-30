@@ -16,3 +16,25 @@
     "kwargs_max_len": 7
 }
 """
+
+
+def dict_from_args(*args, **kwargs):
+
+    if not all(isinstance(arg, int) for arg in args):
+        raise TypeError("Все позиционные аргументы должны быть целыми")
+    
+    if not all(isinstance(kwarg, str) for kwarg in kwargs.values()):
+        raise TypeError("Все позиционные аргументы должны быть строками")
+    
+    args_sum = sum(args)
+
+    kwargs_max_len = max((len(val) for val in kwargs.values()), default=0)
+
+    return {
+        "args_sum": args_sum,
+        "kwargs_max_len": kwargs_max_len
+        }
+
+
+test_dict = dict_from_args(1 ,2 , 3, 4, name = 'Vasya', second_name = "Ivanov")
+print(test_dict)
