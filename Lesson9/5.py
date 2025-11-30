@@ -37,3 +37,39 @@
 
 
 '''
+
+
+
+def hierarchy (some_list: list, begin_line="") -> str:
+    
+    try:
+        if not isinstance(some_list, list):
+            raise TypeError("Надо вести внсти список")
+
+    
+        dash = "--"
+
+        for i in some_list:
+            if isinstance(i, list):
+                hierarchy(i ,begin_line + dash)
+            else:
+                print(begin_line + str(i))
+    
+    except TypeError:
+        print(TypeError)
+
+    
+        
+
+
+
+
+some_list = [1, 2, 3, [4, [5, 6], 7], 8, 9]
+
+hierarchy(some_list)
+
+some_list=[1,[2,[[3],4]],5,[[[6,7]]],8,[[[[9,10]],11]],12]
+
+hierarchy(some_list)
+
+
