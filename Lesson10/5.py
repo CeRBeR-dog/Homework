@@ -16,3 +16,29 @@ print(c10()) -> 12
 print(c10()) -> 13 
 
 """
+
+
+def counter(x) -> int:
+
+    count = x
+
+    def wrapper():
+        nonlocal count
+        count += 1
+        return count
+    
+    return wrapper
+
+if __name__ == "__main__":
+
+    c1 = counter(1)
+    c10 = counter(10)
+
+
+    print(c1()) 
+    print(c1()) 
+    print(c1()) 
+
+    print(c10())  
+    print(c10())  
+    print(c10()) 

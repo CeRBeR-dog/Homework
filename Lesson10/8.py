@@ -7,3 +7,29 @@
 * сделать настраиваемы параметр который определяет печать в консоль или в файл
 и если в файл передать название фала
 """
+
+def err_message(func):
+
+    def wrapper(*args, **kwargs):
+        
+        #Если ошибки нет возразаем результат
+        try:
+            return func(*args, **kwargs)
+        
+        #Ловим ошибки и выводим имя функции и текст ошибку
+        except Exception as e:
+            print(f"Ошибка в функции '{func.__name__}' : {e}")
+    
+    return wrapper
+
+
+if __name__ == '__main__':
+    
+    @err_message
+    def divis (a, b):
+        return int(a) / int(b)
+    
+    a = input('Введите число: ')
+    b = input('Введите число: ')
+
+    print(divis(a, b))
