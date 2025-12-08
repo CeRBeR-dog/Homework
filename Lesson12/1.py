@@ -14,7 +14,7 @@ says таким образом, чтобы он возвращал строку 
 """
 
 class Animal:
-    name = "Кличка"
+    name: str = "Кличка"
 
     def __init__(self, name):
         self.name = name
