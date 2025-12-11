@@ -60,7 +60,10 @@ class Student:
 
     def average_grade(self):
         if not self.grads:
-            return ("Нету оценок для расчёта среднего балла")
+            #Не правильно
+            #return ("Нету оценок для расчёта среднего балла")
+           
+            return 0
         
         return sum(self.grads)/len(self.grads)
 
