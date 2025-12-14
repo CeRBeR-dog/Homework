@@ -34,23 +34,38 @@
 Валидацию данных сделать через регулярные выражения
 """
 
-
+import re
+from datetime import date, timedelta
+import random
+import string
+from typing import Optional, Tuple
 
 
 class User:
     
-	def __init__(self,
-			  subscription_date, 
+	def __init__(self, 
 			  name: str, 
 			  login: str, 
-			  password: str = None, 
-			  is_blocked: bool = False,  
+			  password: Optional[str] = None, 
+			  is_blocked: bool = False, 
+			  subscription_date: Optional[date] = None, 
 			  subscription_mode: str = "free"):
 		
 		self.name = name
 		self.login = login
+
+		if password is None:
+			password = self._generate_password()
+			print("Сгенерирован пароль: ", password)
+
 		self.password = password
-		self.is_blocked = is_blocked
+
+		self.is_blocked = bool(is_blocked)
+
+		if subscription_date is None:
+			subscription_date = date.today() + timedelta(days=30)
+			subscription_mode = 'free'
+
 		self.subscription_date = subscription_date
 		self.subscription_mode = subscription_mode
 
@@ -61,7 +76,10 @@ class User:
 		
 	@login.setter
 	def login(self, value):
-
+		patter_login = r'^[A-Za-z0-9_]$'
+		if not re.fullmatch(patter_login, value) or len(value)>6:
+			raise ValueError('Логин может содержать только латинские ' \
+			'буквы цифры и черту подчеркивания быть не менее 6 символов')
 
 		self._login = value
 	
@@ -72,9 +90,25 @@ class User:
 	
 	@password.setter
 	def password(self, value):
-
+		patter_password = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)$'
+		if not re.fullmatch(patter_password, value):
+			raise ValueError(' пароль - может содержать  только латинские буквы цифры. Обязательные условия:' \
+				'\nсодержит менее шести символов'\
+                '\nсодержит строчную букву'\
+                '\nсодержит заглавную букву'\
+                '\nсодержит число')
 
 		self._password = value
+	
+	def _generate_password(self, lenght: int = 6):
+		low = random.choice(string.ascii_lowercase)
+		up = random.choice(string.ascii_uppercase)
+		dig = random.choice(string.digits)
+		oth = ''.join(random.choice(string.ascii_letters + string.ascii_uppercase
+							  + string.digits, k = max(lenght -3,1)))
+		pwd =list(low + up + dig + oth)
+		random.shuffle(pwd)
+		return ''.join(pwd)
 
 
 	@property
@@ -83,6 +117,16 @@ class User:
 
 	@name.setter
 	def name(self, value):
-
+		pattern_name = r'^[А-Яа-яЁё]+$' 
+		if not re.fullmatch(pattern_name, value):
+			raise ValueError('Имя может содержит только буквы русского алфавита')
 
 		self._name = value
+
+	
+	def bloc(self, flag: bool):
+		self.is_blocked = bool(flag)
+
+	
+	
+		
