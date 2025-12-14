@@ -36,7 +36,7 @@
 
 import re
 from datetime import date, timedelta
-import random
+import secrets
 import string
 from typing import Optional, Tuple
 
@@ -68,6 +68,19 @@ class User:
 
 		self.subscription_date = subscription_date
 		self.subscription_mode = subscription_mode
+	
+
+	@property
+	def name(self):
+		return self._name
+
+	@name.setter
+	def name(self, value):
+		pattern_name = r'^[А-Яа-яЁё]+$' 
+		if not re.fullmatch(pattern_name, value):
+			raise ValueError('Имя может содержит только буквы русского алфавита')
+
+		self._name = value
 
 
 	@property
@@ -100,28 +113,20 @@ class User:
 
 		self._password = value
 	
-	def _generate_password(self, lenght: int = 6):
-		low = random.choice(string.ascii_lowercase)
-		up = random.choice(string.ascii_uppercase)
-		dig = random.choice(string.digits)
-		oth = ''.join(random.choice(string.ascii_letters + string.ascii_uppercase
-							  + string.digits, k = max(lenght -3,1)))
-		pwd =list(low + up + dig + oth)
-		random.shuffle(pwd)
-		return ''.join(pwd)
-
-
-	@property
-	def name(self):
-		return self._name
-
-	@name.setter
-	def name(self, value):
-		pattern_name = r'^[А-Яа-яЁё]+$' 
-		if not re.fullmatch(pattern_name, value):
-			raise ValueError('Имя может содержит только буквы русского алфавита')
-
-		self._name = value
+	def _generate_password(self) -> str:
+		length = 6
+		
+		char = [
+			secrets.choice(string.ascii_lowercase),
+			secrets.choice(string.ascii_uppercase),
+			secrets.choice(string.digits),
+			]
+		char += [	
+			secrets.choice(string.ascii_letters + string.ascii_uppercase + string.digits)
+			for _ in range(length-1)
+		]
+		secrets.SystemRandom.shuffle(char)
+		return ''.join(char)
 
 	
 	def bloc(self, flag: bool):
