@@ -129,9 +129,66 @@ class User:
 		return ''.join(char)
 
 	
+	@property
+	def subscription_date(self) -> date:
+		return self._subscription_date
+	
+	@subscription_date.setter
+	def subscription_date(self, value: date):
+		if not isinstance(value, date):
+			raise ValueError('subscription_date должен быть datetime.date')
+
+		self._subscription_date = value
+		self.subscription_mode = "paid"
+
+
+	@property
+	def subscription_mode(self) -> str:
+		return self._subscription_mode
+	
+	@subscription_mode.setter
+	def subscription_mode(self, value: str):
+		if value not in ('free','paid'):
+			return ('subscription_mode должен иметь значение "free" или "paid"')
+		
+		self._subscription_mode = value
+
+	# Методы
 	def bloc(self, flag: bool):
 		self.is_blocked = bool(flag)
 
+	def check_subscr(self, on_date: Optional[date] = None) -> Tuple[bool, str, int]:
+		"""Возвращает (действует ли, вид подписки, сколько дней осталось)"""
+		if not isinstance(on_date, date):
+			raise ValueError('on_date должен быть datetime.time или None')
+		
+		if on_date is None:
+			on_date = date.today()
+		
+		days_left = (self.subscription_date - on_date).days
+		active = days_left >= 0
+		return active, self.subscription_mode, max(days_left,0)
+	
+	def change_pass(self, new_pass: Optional[str] = None) -> str:
+		"""Если new_pass None — генерируем, иначе валидируем и присваиваем. Возвращаем новый пароль."""
+		if new_pass is None:
+			new_pass = self._generate_password
+			print("Сгенерирован пароль: ", new_pass)
+		
+		self.password = new_pass
+		return new_pass
+	
+	def get_info(self) -> str:
+		if self.is_blocked:
+			return "Пользователь заблокирован"
+		
+		info = (
+			f"Имя: {self.name}\n"
+			f"Логин: {self.login}\n" 
+			f"Подписка до: {self._subscription_date} ({self._subscription_mode})\n" 
+		)
+		return info
+		 
 	
 	
 		
