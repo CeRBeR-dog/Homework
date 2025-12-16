@@ -89,8 +89,8 @@ class User:
 		
 	@login.setter
 	def login(self, value):
-		patter_login = r'^[A-Za-z0-9_]$'
-		if not re.fullmatch(patter_login, value) or len(value)>6:
+		patter_login = r'^[A-Za-z0-9_]{6,}$'
+		if not re.fullmatch(patter_login, value) :
 			raise ValueError('Логин может содержать только латинские ' \
 			'буквы цифры и черту подчеркивания быть не менее 6 символов')
 
@@ -103,10 +103,10 @@ class User:
 	
 	@password.setter
 	def password(self, value):
-		patter_password = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)$'
+		patter_password = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z0-9]{6,}$'
 		if not re.fullmatch(patter_password, value):
 			raise ValueError(' пароль - может содержать  только латинские буквы цифры. Обязательные условия:' \
-				'\nсодержит менее шести символов'\
+				'\nсодержит более шести символов'\
                 '\nсодержит строчную букву'\
                 '\nсодержит заглавную букву'\
                 '\nсодержит число')
@@ -123,9 +123,9 @@ class User:
 			]
 		char += [	
 			secrets.choice(string.ascii_letters + string.ascii_uppercase + string.digits)
-			for _ in range(length-1)
+			for _ in range(length-3)
 		]
-		secrets.SystemRandom.shuffle(char)
+		secrets.SystemRandom().shuffle(char)
 		return ''.join(char)
 
 	
@@ -139,7 +139,7 @@ class User:
 			raise ValueError('subscription_date должен быть datetime.date')
 
 		self._subscription_date = value
-		self.subscription_mode = "paid"
+		
 
 
 	@property
@@ -149,7 +149,7 @@ class User:
 	@subscription_mode.setter
 	def subscription_mode(self, value: str):
 		if value not in ('free','paid'):
-			return ('subscription_mode должен иметь значение "free" или "paid"')
+			raise ValueError('subscription_mode должен иметь значение "free" или "paid"')
 		
 		self._subscription_mode = value
 
@@ -157,13 +157,21 @@ class User:
 	def bloc(self, flag: bool):
 		self.is_blocked = bool(flag)
 
+	def extend_subscription(self, days: int):
+		if days <= 0:
+			raise ValueError('days должен быть положительным')
+
+		self.subscription_date += timedelta(days=days)
+		self.subscription_mode = 'paid'
+
 	def check_subscr(self, on_date: Optional[date] = None) -> Tuple[bool, str, int]:
 		"""Возвращает (действует ли, вид подписки, сколько дней осталось)"""
-		if not isinstance(on_date, date):
-			raise ValueError('on_date должен быть datetime.time или None')
-		
 		if on_date is None:
 			on_date = date.today()
+		
+		if not isinstance(on_date, date):
+			raise ValueError('on_date должен быть datetime.date или None')
+		
 		
 		days_left = (self.subscription_date - on_date).days
 		active = days_left >= 0
@@ -172,7 +180,7 @@ class User:
 	def change_pass(self, new_pass: Optional[str] = None) -> str:
 		"""Если new_pass None — генерируем, иначе валидируем и присваиваем. Возвращаем новый пароль."""
 		if new_pass is None:
-			new_pass = self._generate_password
+			new_pass = self._generate_password()
 			print("Сгенерирован пароль: ", new_pass)
 		
 		self.password = new_pass
@@ -185,10 +193,31 @@ class User:
 		info = (
 			f"Имя: {self.name}\n"
 			f"Логин: {self.login}\n" 
-			f"Подписка до: {self._subscription_date} ({self._subscription_mode})\n" 
+			f"Подписка до: {self.subscription_date} ({self.subscription_mode})\n" 
 		)
 		return info
 		 
 	
 	
 		
+if __name__ == "__main__":
+
+
+	users = [
+		User('Вася', 'vasya_123', 'Vasya1'),
+		User('Петя', 'petya456', 'Secure1'),
+		User('Маша', 'masha_789', 'Strong1A'),
+		User('Оля', 'olya_abc', 'Olga123'),
+		User('Иван', 'ivan_ivan', None),
+		User('Катя', 'katya_katya', 'Katya2024'),
+	]
+
+
+	print(User.get_info(users[0]))
+	
+	print(User.check_subscr(users[4]))
+
+	print(User.change_pass(users[1], None))
+
+	print(User.change_pass(users[2], 'NewPass2'))
+	
