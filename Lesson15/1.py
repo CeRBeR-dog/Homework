@@ -33,7 +33,7 @@ import secrets
 import string
 from typing import Optional, Tuple
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Date, ForeignKey, Float
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker, query
 
 Base = declarative_base()
 
@@ -70,7 +70,7 @@ class UserService(Base):
 	__tablename__="user_service"
 
 	id_us = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("user.id_u"))
+	user_id = Column(Integer, ForeignKey("users.id_u"))
 	service_id = Column(Integer, ForeignKey("service.id_s"))
 
 	start_date = Column(Date)
@@ -236,5 +236,90 @@ class User:
 		)
 		return info
 		 
+	def save(self, session):
+
+		user = session.query(UserModel).filter_by(login=self.login).first()
+
+		if user is None:
+
+			user = UserModel(
+				name = self.name,
+				login = self.login,
+				password = self.password,
+				is_blocked =self.is_blocked
+			)
+			session.add(user)
+		
+		else:
+			user.name = self.name
+			user.password = self.password
+			user.is_blocked = self.is_blocked
+		
+		session.commit()
+		return user
 	
+	def add_service(self, session, service: Service):
+
+		user = session.query(UserModel).filter_by(login=self.login).first()
+
+		today = date.today()
+		end = today + timedelta(days=service.period_days)
+
+		us = UserService(
+			user=user,
+			service=service,
+			start_date=today,
+			end_date=end
+		)
+
+		session.add(us)
+		session.commit()
+	
+	def extend_service(self, session, service: Service):
+
+		user = session.query(UserModel).filter_by(login=self.login).first()
+		today = date.today()
+
+		us = session.query(UserService).filter_by(
+			user_id = user.id_u,
+			service_id = service.id_s
+		).first()
+
+		if us and us.end_date >= today:
+			us.end_date += timedelta(days=service.period_days)
+
+		else:
+			self.add_service(session, service)
+
+		session.commit()
+
+	def delete_service(self, session, service: Service):
+
+		user = session.query(UserModel).filter_by(login=self.login).first()
+
+		us = session.query(UserService).filter_by(
+			user_id = user.id_u,
+			service_id = service.id_s
+		).first()
+
+		if us:
+			session.delete(us)
+			session.commit()
+		
+
+
+
+
+
+
+if __name__ == "__main__":
+
+	engine = create_engine("sqlite:///app.db")
+	Base.metadata.create_all(engine)
+
+	Session = sessionmaker(bind=engine)
+	session = Session()
+
+	user = User("Иван", "ivan123", "Qwerty1")
+	user.save(session)
 	
