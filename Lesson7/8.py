@@ -19,7 +19,7 @@ eval() exec() нельзя
 
 import operator
 
-example = " "
+example = ""
 operations = {
     "+": operator.add,
     "-": operator.sub,
@@ -30,7 +30,7 @@ operations = {
 
 print("Поддерживаемые операции: + - * ** /")
 
-while example != "stop":
+while True:
     
     example = input('Введите пример или "стоп" для завершения: ')
 
@@ -38,7 +38,7 @@ while example != "stop":
         break
 
     try:
-        first_var, sign, second_var = example.split(" ")
+        first_var, sign, second_var = example.split()
         first_var = int(first_var)
         second_var = int(second_var)
 
@@ -55,4 +55,4 @@ while example != "stop":
             print("Ошибка: деление на ноль")
         
     else:
-        print("Такая операция пока не подерживается")
+        print("Такая операция пока не поддерживается")
