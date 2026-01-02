@@ -17,4 +17,42 @@
 eval() exec() нельзя
 """
 
+import operator
 
+example = " "
+operations = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow
+}
+
+print("Поддерживаемые операции: + - * ** /")
+
+while example != "stop":
+    
+    example = input('Введите пример или "стоп" для завершения: ')
+
+    if example.lower() == "stop":
+        break
+
+    try:
+        first_var, sign, second_var = example.split(" ")
+        first_var = int(first_var)
+        second_var = int(second_var)
+
+    except ValueError:
+        print("Неправильный формат. Пример: '2 + 4'")
+        continue
+    
+    if sign in operations:
+        
+        try:
+            print(operations[sign](first_var, second_var))
+        
+        except ZeroDivisionError:
+            print("Ошибка: деление на ноль")
+        
+    else:
+        print("Такая операция пока не подерживается")
